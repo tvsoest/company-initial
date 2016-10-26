@@ -1,5 +1,6 @@
 package io.rscale.training.company;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -26,9 +27,15 @@ public class DataSourceConfig {
     @Value("${mysql.server}")
     private String mysqlServer;
     
+    @Value("${mysql.port}")
+    private int mysqlPort;
+    
     private DataSource dataSource;
     
-    public DataSourceConfig() {
+    public DataSourceConfig() {}
+    
+    @PostConstruct
+    public void init() {
         logger.info(this.getClass() + " loaded");
         try {
 	    	MysqlDataSource mysql = new MysqlDataSource();
@@ -36,6 +43,7 @@ public class DataSourceConfig {
 	    	mysql.setUser(mysqlUser);
 	    	mysql.setPassword(mysqlPassword);
 	    	mysql.setServerName(mysqlServer);
+	    	mysql.setPort(mysqlPort);
 	    	logger.info("Created datasource:  " + mysql);
 	        this.dataSource = mysql;
     	} catch (Exception e) {
